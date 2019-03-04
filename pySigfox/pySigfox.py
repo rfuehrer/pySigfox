@@ -163,8 +163,9 @@ class Sigfox:
         r = requests.get(url, auth=requests.auth.HTTPBasicAuth(self.login, self.password))
         out.extend(json.loads(r.text)['data'])
         try:
-            json.loads(r.text)['paging']['next']
-            out.extend(self.device_messages_page(json.loads(r.text)['paging']['next']))
+            if 'next' in r.text:
+                json.loads(r.text)['paging']['next']
+                out.extend(self.device_messages_page(json.loads(r.text)['paging']['next']))
         except Exception as e:
             # no more pages
             pass
